@@ -1,3 +1,4 @@
+import 'package:animations/widgets/animated_logo.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,8 +21,12 @@ class _HomePageState extends State<HomePage>
       duration: const Duration(seconds: 2),
     );
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
-      ..addListener(() {
-        setState(() {});
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
       });
     controller.forward();
   }
@@ -34,12 +39,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: animation.value,
-        width: animation.value,
-        child: const FlutterLogo(),
-      ),
-    );
+    return AnimatedLogo(animation);
   }
 }
